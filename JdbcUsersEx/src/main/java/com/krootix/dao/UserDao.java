@@ -1,12 +1,22 @@
 package com.krootix.dao;
 
 import com.krootix.entity.User;
-import com.krootix.utils.DBSystemException;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
+import java.util.List;
 
 public interface UserDao {
-    public User findById(int id) throws DBSystemException, SQLException, DBSystemException;
-    public int updateSurname(int id, String surname) throws DBSystemException, SQLException;
-//    public void updateSurname(int id, String surname) throws DBSystemException, SQLException;
+
+    boolean deleteUserById(long id) throws SQLException;
+
+    void createDbUser() throws SQLException, IOException, URISyntaxException;
+
+    List<User> selectAll() throws SQLException;
+
+    User findUserById(long id) throws SQLException;
+
+    int updateUser(long id, User user) throws SQLException;
+
 }
