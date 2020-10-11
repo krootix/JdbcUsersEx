@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -34,17 +35,19 @@ public class FileReader {
         String rootPath = requireNonNull(Thread.currentThread().getContextClassLoader().getResource("")).getPath();
 
         String defaultConfigPath = rootPath + PATH;
-        Properties dbProperties = new Properties();
-        try {
-            dbProperties.load(new FileInputStream(defaultConfigPath));
+        final Properties dbProperties = new Properties();
+
+        try (final FileInputStream inStream = new FileInputStream(defaultConfigPath)) {
+            dbProperties.load(inStream);
             boolean isValidated = propertiesValidator.validate(dbProperties);
 
-            logger.error("validating properties. correct: {}", isValidated);
+            logger.info("validating properties. correct: {}", isValidated);
 
             if (!isValidated) throw new IllegalArgumentException("Check the properties file");
+        } catch (FileNotFoundException e) {
+            logger.error("File {} not found", defaultConfigPath);
         } catch (IOException e) {
             logger.error("IOException: {}", e.getMessage());
-
         }
         return dbProperties;
     }

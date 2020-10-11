@@ -95,7 +95,6 @@ public class UserDaoJdbcImpl implements UserDao {
             sqlConnection.setAutoCommit(false);
 
             isSuccess = preparedStatementUpdateUser.executeUpdate();
-            sqlConnection.commit();
             if (isSuccess == 1)
                 logger.info("User[{}] has been updated.", id);
             else
@@ -119,7 +118,6 @@ public class UserDaoJdbcImpl implements UserDao {
             for (String returnValue : data.split(";")) {
                 preparedStatementCreateTable.execute(returnValue + ";");
             }
-            sqlConnection.commit();
             logger.info("Table of users has been created");
         }
     }
